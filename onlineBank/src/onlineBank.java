@@ -1,6 +1,6 @@
-
+import java.util.Scanner;
 /**
- * The class will take an input of side lengths and return the area of the triangle
+ * 
  * @author Tyler Hardison
  * @author Javion May
  */
