@@ -40,14 +40,17 @@ center_frame = Frame(
 )
 center_frame.place(x=utils.width_prct(25), y=utils.height_prct(25))
 
-#This creates a cell
+#The code below creates the grid of cells
+#Needs nested loops to take in the proper size of the grid
 for x in range(settings.GRID_SIZE):
     for y in range(settings.GRID_SIZE):
-        c = Cell()
+        c = Cell(x,y)
         c.create_btn_object(center_frame)
         c.cell_btn_object.grid(
             column=x, row=y
         )
+
+Cell.randmize_mines()
 
 
 #Run the window
