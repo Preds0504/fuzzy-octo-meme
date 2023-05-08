@@ -1,7 +1,10 @@
 """This module is for the cell class and most of the game logic"""
 from tkinter import Button, Label
 import random
+import ctypes
+import sys
 import settings
+
 #Creates the Cells which the buttons will appear on
 #This will be an object that will created many times
 class Cell:
@@ -26,6 +29,7 @@ class Cell:
         self.is_opened = False
         self.x_coord = x_coord
         self.y_coord = y_coord
+        self.is_mine_candidate = False
         #will add each cell to this list
         Cell.all.append(self)
 
@@ -71,6 +75,13 @@ class Cell:
                 for cell_obj in self.surrounded_cells:
                     cell_obj.show_cell()
             self.show_cell()
+            #if the mines count is equal to the cells left count, player wins
+            if Cell.cell_count == settings.MINES_COUNT:
+                ctypes.windll.user32.MessageBoxW(0, 'Congratulations, You won the Game!',
+                "Game Over", 0)
+            #will cancel left and right clicking for opened cells
+            self.cell_btn_object.unbind('<Button-1>')
+            self.cell_btn_object.unbind('<Button-3>')
 
     def get_cell_by_axis(self,x_coord,y_coord):
         """
@@ -116,11 +127,16 @@ class Cell:
             Cell.cell_count -= 1
             self.cell_btn_object.configure(
                 text=self.surrounded_cells_mines_length)
-            #the if structure each time a cell is clicked it will replace the old label with the updated one
+            #the if structure each time a cell is clicked
+            # it will replace the old label with the updated one
             if Cell.cell_count_label_object:
                 Cell.cell_count_label_object.configure(
                     text = f"Cells Left:{Cell.cell_count}"
                 )
+            #This to reset the color of a minecandidate after being left-clicked
+            self.cell_btn_object.configure(
+                bg = 'SystemButtonFace'
+            )
         #This will mark if the cell has been opened
         self.is_opened = True
 
@@ -128,13 +144,24 @@ class Cell:
     def show_mine(self):
         """Will run when a mine must be displayed from being clicked"""
         self.cell_btn_object.configure(bg='red')
+        ctypes.windll.user32.MessageBoxW(0, 'you clicked on a mine', 'Game Over', 0)
+        sys.exit()
+
 
     def right_click_actions(self, event):
         """
-        This is simply display in the console if a cell has been right clicked
+        This will be run once a cell has been right-clicked
         """
-        print(event)
-        print("I am right clicked")
+        if not self.is_mine_candidate:
+            self.cell_btn_object.configure(
+                bg = 'orange'
+            )
+            self.is_mine_candidate = True
+        else:
+            self.cell_btn_object.configure(
+                bg='SystemButtonFace'
+            )
+            self.is_mine_candidate = False
 
     @staticmethod
     def randmize_mines():

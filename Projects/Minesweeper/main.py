@@ -1,6 +1,5 @@
 """This the main module for the Minesweeper game"""
-from tkinter import Tk
-from tkinter import Frame
+from tkinter import Tk, Label, Frame
 import settings
 import utils
 from cell import Cell
@@ -22,6 +21,20 @@ top_frame = Frame(
     height=utils.height_prct(25)
 )
 top_frame.place(x=0, y=0)
+
+#Creates the Game title in the top frame
+game_title = Label(
+    top_frame,
+    bg = 'black',
+    fg = 'white',
+    text = 'Minesweeper Game',
+    font = ('', 48)
+)
+
+game_title.place(
+    x=utils.width_prct(25),
+    y=0
+)
 
 #creates a frame and places on the left below the top panel
 left_frame = Frame(
