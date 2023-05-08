@@ -1,4 +1,4 @@
-"""this imports what will be the window for the game"""
+"""This the main module for the Minesweeper game"""
 from tkinter import Tk
 from tkinter import Frame
 import settings
@@ -51,6 +51,12 @@ for x in range(settings.GRID_SIZE):
             column=x, row=y
         )
 
+#Will display the cell count label in the left frame
+Cell.create_cell_count_label(left_frame)
+Cell.cell_count_label_object.place(
+    x=0, y=0
+)
+#Calling this will randomize the cells in the game
 Cell.randmize_mines()
 
 

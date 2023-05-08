@@ -1,5 +1,5 @@
-"""This module imports the button classes"""
-from tkinter import Button
+"""This module is for the cell class and most of the game logic"""
+from tkinter import Button, Label
 import random
 import settings
 #Creates the Cells which the buttons will appear on
@@ -11,6 +11,10 @@ class Cell:
     """
     #this is to be a list of cells
     all =[]
+    #this value will be changed to help display cells left
+    cell_count = settings.CELL_COUNT
+    #using this to make the label count accessible for the whole class
+    cell_count_label_object = None
     def __init__(self, x_coord, y_coord, is_mine=False):
         """
         This is the default constructor
@@ -19,6 +23,7 @@ class Cell:
         """
         self.is_mine = is_mine
         self.cell_btn_object = None
+        self.is_opened = False
         self.x_coord = x_coord
         self.y_coord = y_coord
         #will add each cell to this list
@@ -39,6 +44,20 @@ class Cell:
         btn.bind('<Button-3>', self.right_click_actions)
         self.cell_btn_object = btn
 
+    @staticmethod
+    def create_cell_count_label(location):
+        """Creates a label to show cells left"""
+        lbl = Label(
+            location,
+            bg='black',
+            fg = 'white',
+            text=f"Cells Left:{Cell.cell_count}",
+            width = 12,
+            height = 4,
+            font = ("Ariel", 30)
+        )
+        Cell.cell_count_label_object = lbl
+
     def left_click_actions(self, event):
         """
         this is the function that runs after a left click
@@ -46,6 +65,11 @@ class Cell:
         if self.is_mine:
             self.show_mine()
         else:
+            #this shows all cells that surround a cell with 0 mines to speed the game up
+            if self.surrounded_cells_mines_length == 0:
+                #cell_obj is the place holder for each element in the loop
+                for cell_obj in self.surrounded_cells:
+                    cell_obj.show_cell()
             self.show_cell()
 
     def get_cell_by_axis(self,x_coord,y_coord):
@@ -88,7 +112,18 @@ class Cell:
         """
         This method shows cells around a non-mine cell
         """
-        self.cell_btn_object.configure(text=self.surrounded_cells_mines_length)
+        if not self.is_opened:
+            Cell.cell_count -= 1
+            self.cell_btn_object.configure(
+                text=self.surrounded_cells_mines_length)
+            #the if structure each time a cell is clicked it will replace the old label with the updated one
+            if Cell.cell_count_label_object:
+                Cell.cell_count_label_object.configure(
+                    text = f"Cells Left:{Cell.cell_count}"
+                )
+        #This will mark if the cell has been opened
+        self.is_opened = True
+
 
     def show_mine(self):
         """Will run when a mine must be displayed from being clicked"""
