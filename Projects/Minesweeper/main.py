@@ -1,5 +1,6 @@
-#Library used to import classes to help create a window
-from tkinter import *
+"""this imports what will be the window for the game"""
+from tkinter import Tk
+from tkinter import Frame
 import settings
 import utils
 from cell import Cell
