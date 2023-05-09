@@ -1,4 +1,6 @@
-"""This the main module for the Minesweeper game"""
+"""
+This the main module for the Minesweeper game
+"""
 from tkinter import Tk, Label, Frame
 import settings
 import utils
